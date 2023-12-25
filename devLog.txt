@@ -1,0 +1,8 @@
+First things first i began on december 24th 
+I created the window and the lines for the board
+I made a block class on the 25th i made blocks move and not leave the screan
+next up im gonna make the blocks eithr snap on or detect which space thier in
+Ill have to make both anyway but for now ill make them grey out when moving
+I didnt use grey but cyan instead looks a lil nicer
+Now ill try to make it snap into place should be simple what would be harder would 
+be keeping track of the thingies now ill try sum

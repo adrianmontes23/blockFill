@@ -27,11 +27,32 @@ class BlockFill():
         self.blockList = []
         self.movingBlock = None
 
+        self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        self.xCenter = [ 65, 115, 165, 215, 265, 315, 365, 415, 465, 515]
+        self.yCenter = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550]
+
         for i in range(3):
             self.blockList.append(Block.Block(self.canvas, (i+1) * 140, 700, (i+1) * 140 + 50, 750))
+
+    def snapBoard(self):
+        for block in self.blockList:
+            for i in range(len(self.xCenter)):
+                for j in range(len(self.xCenter)):
+                    if block.inRange(self.xCenter[i], self.yCenter[j]):
+                        block.snap(self.xCenter[i], self.yCenter[j])
+                    
         
     def mousePointer(self, e):
-        if not self.pressed and self.movingBlock == None:
+        if not self.pressed or self.movingBlock == None:
             return
         if e.x < 25:
             e.x = 25
@@ -49,11 +70,14 @@ class BlockFill():
             if block.inRange(e.x, e.y):
                 self.movingBlock = block
                 self.movingBlock.movable = True
+                self.canvas.itemconfig(self.movingBlock.block, fill = "Cyan")
 
     def mouseRelease(self, e):
         self.pressed = False
         if self.movingBlock:
             self.movingBlock.movable = False
+            self.canvas.itemconfig(self.movingBlock.block, fill = "Blue")
+            self.snapBoard()
 
     def main(self):
         while True:
