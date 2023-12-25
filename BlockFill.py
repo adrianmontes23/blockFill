@@ -11,7 +11,7 @@ class BlockFill():
         frame.grid()
         
         #960 × 540
-        self.canvas = Canvas(frame, width= 580, height=960)
+        self.canvas = Canvas(frame, width= 580, height=800)
         self.canvas.grid(row=0, column = 0)
         
         self.canvas.bind_all("<Motion>", self.mousePointer)
@@ -19,31 +19,45 @@ class BlockFill():
         self.canvas.bind_all("<ButtonRelease-1>", self.mouseRelease)
 
         for i in range(11):
-            self.canvas.create_line(40, i * 50 + 100, 540, i * 50 + 100)
+            self.canvas.create_line(40, i * 50 + 75, 540, i * 50 + 75)
         for i in range(11):
-            self.canvas.create_line(i * 50 + 40, 100, i * 50 + 40, 600)
+            self.canvas.create_line(i * 50 + 40, 75, i * 50 + 40, 575)
 
         self.pressed = False
         self.blockList = []
+        self.movingBlock = None
 
         for i in range(3):
             self.blockList.append(Block.Block(self.canvas, (i+1) * 140, 700, (i+1) * 140 + 50, 750))
         
     def mousePointer(self, e):
-        if not self.pressed:
+        if not self.pressed and self.movingBlock == None:
             return
-        for block in self.blockList:
-            print(block.inRange(e.x, e.y))
+        if e.x < 25:
+            e.x = 25
+        if e.x > 555:
+            e.x = 555
+        if e.y < 25:
+            e.y = 25
+        if e.y > 775:
+            e.y = 775
+        self.movingBlock.move(e.x, e.y)
 
     def mouseClick(self, e):
         self.pressed = True
+        for block in self.blockList:
+            if block.inRange(e.x, e.y):
+                self.movingBlock = block
+                self.movingBlock.movable = True
 
     def mouseRelease(self, e):
         self.pressed = False
+        if self.movingBlock:
+            self.movingBlock.movable = False
 
     def main(self):
         while True:
-            time.sleep(.1)
+            time.sleep(.01)
             self.tk.update()
             self.tk.update_idletasks()
 
