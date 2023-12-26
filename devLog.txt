@@ -6,3 +6,12 @@ Ill have to make both anyway but for now ill make them grey out when moving
 I didnt use grey but cyan instead looks a lil nicer
 Now ill try to make it snap into place should be simple what would be harder would 
 be keeping track of the thingies now ill try sum
+Blocks now snap next up, actually take a space up 
+code wise.
+Blocks take up spaces in code now, time to make more
+appear when the current ones are used up.
+They are now replaceable easy enough ill now move on 
+to make them return if the move is invalid.
+Blocks can now return and are successfuly placed
+I did have a problem where clicking on the screen after 
+placing a block would return it but fixed now.
