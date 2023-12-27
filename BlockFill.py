@@ -17,7 +17,9 @@ class BlockFill():
         self.canvas.bind_all("<Motion>", self.mousePointer)
         self.canvas.bind_all("<ButtonPress-1>", self.mouseClick)
         self.canvas.bind_all("<ButtonRelease-1>", self.mouseRelease)
-
+    
+        self.score = 0
+        self.scoreDisplay = self.canvas.create_text(290, 50, text = "Score: 0", font = ("Helvanica", 25))
         for i in range(11):
             self.canvas.create_line(40, i * 50 + 75, 540, i * 50 + 75)
         for i in range(11):
@@ -51,6 +53,22 @@ class BlockFill():
             for i in range(3):
                 self.blockList.append(Block.Block(self.canvas, (i+1) * 140, 700, (i+1) * 140 + 50, 750))
 
+    def clearSpace(self, rows, columns):
+        for row in rows:
+            self.score += 10
+            for block in self.blockList:
+                if block.row == row:
+                    block.destroyBlock(self.board)
+        for column in columns:
+            self.score += 10
+            for block in self.blockList:
+                if block.column == column:
+                    block.destroyBlock(self.board)
+
+        # destory each block 
+        # reset code board on row/column
+        # add to score 
+
     def snapBoard(self):
         for block in self.blockList:
             for i in range(len(self.xCenter)):
@@ -58,7 +76,9 @@ class BlockFill():
                     if block.inRange(self.xCenter[i], self.yCenter[j]) and self.board[i][j] == 0:
                         block.snap(self.xCenter[i], self.yCenter[j])
                         self.board[i][j] = 1
+                        block.placeOnBoard(i, j)
                         block.usable = False
+                        self.score += 5
                         return True
         if self.movingBlock.usable:
             return False
@@ -80,7 +100,8 @@ class BlockFill():
                 filledColumns.append(i)
             if rowFilled:
                 filledRows.append(i)
-        return filledColumns, filledRows
+        if len(filledRows) > 0 or len(filledColumns) > 0:
+            self.clearSpace(filledColumns, filledRows)
         
     def mousePointer(self, e):
         if not self.pressed or self.movingBlock == None:
@@ -111,12 +132,14 @@ class BlockFill():
             if not self.snapBoard():
                 self.movingBlock.undoMove()
             else:
-                print(self.checkBoard())
+                self.checkBoard()
             self.createBlocks()
+
 
     def main(self):
         while True:
             time.sleep(.01)
+            self.canvas.itemconfig(self.scoreDisplay, text = f"Score: {self.score}")
             self.tk.update()
             self.tk.update_idletasks()
 

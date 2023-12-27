@@ -11,6 +11,12 @@ class Block():
         self.originalCoords = self.canvas.coords(self.block)
         self.moving = False
         self.usable = True
+        self.row  =  None
+        self.column = None
+
+    def placeOnBoard(self, row, column):
+        self.row = row
+        self.column = column
 
     def inRange(self, x, y):
         if not self.usable:
@@ -54,4 +60,8 @@ class Block():
     def move(self, x, y):
         if self.moving and self.usable:
             self.canvas.moveto(self.block, x - 25, y - 25)
-            self.resetCoords()           
+            self.resetCoords()     
+
+    def destroyBlock(self, board):
+        self.canvas.delete(self.block)
+        board[self.row][self.column] = 0

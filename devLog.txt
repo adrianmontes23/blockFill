@@ -27,3 +27,7 @@ a major part will be placing them
 I have completed a system that knows what rows and columns have been filled
 next up is a way to destroy the columns if 
 it has been filled. But First ill commit rq
+Destroying a row or column 
+Blocks now get destroyed when a row is clearedd
+I also added a score system 
+Ill just ctr c ctr v that into commit cause lol 
