@@ -15,3 +15,15 @@ to make them return if the move is invalid.
 Blocks can now return and are successfuly placed
 I did have a problem where clicking on the screen after 
 placing a block would return it but fixed now.
+Next up are really only harder things left which
+kind of worry me since I kind of do not want to do 
+them but are core parts of the game
+Heres a list of 3 I can think of off the top of me head
+Line completion to score
+actually clearing the lines
+randomly creating multi block blocks 
+The hardest one will most likely be block things since
+a major part will be placing them
+I have completed a system that knows what rows and columns have been filled
+next up is a way to destroy the columns if 
+it has been filled. But First ill commit rq

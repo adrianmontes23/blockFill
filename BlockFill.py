@@ -9,7 +9,7 @@ class BlockFill():
         self.tk.resizable(0, 0)
         frame = Frame(self.tk)
         frame.grid()
-        
+
         #960 × 540
         self.canvas = Canvas(frame, width= 580, height=800)
         self.canvas.grid(row=0, column = 0)
@@ -65,6 +65,23 @@ class BlockFill():
         else: 
             return True
         
+    def checkBoard(self):
+        filledColumns = []
+        filledRows = []
+        for i in range(len(self.board)):
+            columnFilled = True
+            rowFilled = True
+            for j in range(len(self.board[i])):
+                if self.board[i][j] != 1:
+                    columnFilled = False
+                if self.board[j][i] != 1:
+                    rowFilled = False
+            if columnFilled:
+                filledColumns.append(i)
+            if rowFilled:
+                filledRows.append(i)
+        return filledColumns, filledRows
+        
     def mousePointer(self, e):
         if not self.pressed or self.movingBlock == None:
             return
@@ -93,6 +110,8 @@ class BlockFill():
             self.canvas.itemconfig(self.movingBlock.block, fill = "Blue")
             if not self.snapBoard():
                 self.movingBlock.undoMove()
+            else:
+                print(self.checkBoard())
             self.createBlocks()
 
     def main(self):
