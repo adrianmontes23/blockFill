@@ -1,34 +1,45 @@
 from tkinter import *
+from random import randint
 import time
 import Block
 
 class BlockFill():
 
     def __init__(self):
+        # Creates TK Window and Frame
         self.tk = Tk()
         self.tk.resizable(0, 0)
+        self.tk.title("Block Fill")
         frame = Frame(self.tk)
         frame.grid()
 
-        #960 × 540
+        # Creates Canvas and Grids it
         self.canvas = Canvas(frame, width= 580, height=800)
         self.canvas.grid(row=0, column = 0)
         
+        # Binds Mouse Clicks to Functions
         self.canvas.bind_all("<Motion>", self.mousePointer)
         self.canvas.bind_all("<ButtonPress-1>", self.mouseClick)
         self.canvas.bind_all("<ButtonRelease-1>", self.mouseRelease)
     
-        self.score = 0
+        # Creates Display for Score and Board 
         self.scoreDisplay = self.canvas.create_text(290, 50, text = "Score: 0", font = ("Helvanica", 25))
         for i in range(11):
             self.canvas.create_line(40, i * 50 + 75, 540, i * 50 + 75)
         for i in range(11):
             self.canvas.create_line(i * 50 + 40, 75, i * 50 + 40, 575)
-
+        
+        # Initializes Variables
+        ## Int Variables
+        self.score = 0
+        ## Bool Variables
         self.pressed = False
-        self.movingBlock = None
-
+        ## Object Variables
+        ## List Variables
+        self.movingBlocks = []
         self.blockList = []
+        self.xCenter = [ 65, 115, 165, 215, 265, 315, 365, 415, 465, 515]
+        self.yCenter = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550]
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -39,53 +50,79 @@ class BlockFill():
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        self.xCenter = [ 65, 115, 165, 215, 265, 315, 365, 415, 465, 515]
-        self.yCenter = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550]
         
-        self.createBlocks()
+        # Creates Structures to Start Game
+        self.createStructures()
 
-    def createBlocks(self):
+    def createStructures(self):
+        """
+        Creates Structres if No Blocks Left Availible\n
+        return -> None
+        """
         usableCount = 0
         for block in self.blockList:
             if block.usable:
                 usableCount += 1
         if usableCount == 0:
             for i in range(3):
-                self.blockList.append(Block.Block(self.canvas, (i+1) * 140, 700, (i+1) * 140 + 50, 750))
+                self.createRandomStruct(i)
+
+    def createRandomStruct(self, pieceNumber):
+        """
+        Creates Random Stucture based off Presets\n
+        return -> None
+        """
+        randomNum = randint(0, 1)
+        structs = ["single", "TwoUp", "2by2", "3by3", "T", "Z", "4Line"]
+        struct = structs[randomNum]
+        if struct == "single":
+            block = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            self.blockList.append(block)
+        if struct == "TwoUp":
+            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            self.blockList.append(father)
+            block = Block.ChildBlock(self.canvas, parent = father, side =  "right")
+            self.blockList.append(block)
+            father.children.append(block)
 
     def clearSpace(self, rows, columns):
+        """For Each Row and Column Destroy Blocks and Award Points"""
         for row in rows:
             self.score += 10
             for block in self.blockList:
                 if block.row == row:
                     block.destroyBlock(self.board)
+                    #self.blockList.remove(block)
         for column in columns:
             self.score += 10
             for block in self.blockList:
                 if block.column == column:
                     block.destroyBlock(self.board)
+                    #self.blockList.remove(block)
 
-        # destory each block 
-        # reset code board on row/column
-        # add to score 
 
     def snapBoard(self):
-        for block in self.blockList:
-            for i in range(len(self.xCenter)):
-                for j in range(len(self.xCenter)):
+        for i in range(len(self.xCenter)):
+            for j in range(len(self.yCenter)):
+                for block in self.blockList:
                     if block.inRange(self.xCenter[i], self.yCenter[j]) and self.board[i][j] == 0:
+                        try:
+                            block = block.parent
+                        except:
+                            pass
                         block.snap(self.xCenter[i], self.yCenter[j])
                         self.board[i][j] = 1
                         block.placeOnBoard(i, j)
-                        block.usable = False
                         self.score += 5
                         return True
-        if self.movingBlock.usable:
-            return False
-        else: 
-            return True
-        
+            for block in self.movingBlocks:
+                if block.usable:
+                    return False
+                else: 
+                    return True
+
     def checkBoard(self):
+        """For Each Row and Column See if Each is Filled Then Clear"""
         filledColumns = []
         filledRows = []
         for i in range(len(self.board)):
@@ -104,7 +141,8 @@ class BlockFill():
             self.clearSpace(filledColumns, filledRows)
         
     def mousePointer(self, e):
-        if not self.pressed or self.movingBlock == None:
+        """Transfers Mouse Movement to Block Movement"""
+        if not self.pressed or not self.movingBlocks:
             return
         if e.x < 25:
             e.x = 25
@@ -114,33 +152,57 @@ class BlockFill():
             e.y = 25
         if e.y > 775:
             e.y = 775
-        self.movingBlock.move(e.x, e.y)
+        for block in self.movingBlocks:
+            block.move(e.x, e.y)
 
     def mouseClick(self, e):
+        """Upon Left Click, Find Out What Block Was Clicked, Set to Moving, Lighten Color"""
         self.pressed = True
         for block in self.blockList:
             if block.inRange(e.x, e.y):
-                self.movingBlock = block
-                self.movingBlock.moving = True
-                self.canvas.itemconfig(self.movingBlock.block, fill = "Cyan")
-
+                try:
+                    block = block.parent
+                except:
+                    pass
+                self.movingBlocks.append(block)
+                self.movingBlocks.extend(block.children)
+                for block in self.movingBlocks:
+                    block.moving = True
+                    self.canvas.itemconfig(block.block, fill = "Cyan")
+    
     def mouseRelease(self, e):
+        """
+        Upon Left Click Release, Set Moving Block to False, Undo Color Change,\n
+        If Snaped Check Board Else Undo Move\n
+        Creates Structures
+        """
         self.pressed = False
-        if self.movingBlock:
-            self.movingBlock.moving = False
-            self.canvas.itemconfig(self.movingBlock.block, fill = "Blue")
-            if not self.snapBoard():
-                self.movingBlock.undoMove()
-            else:
-                self.checkBoard()
-            self.createBlocks()
-
+        if self.movingBlocks:
+            for block in self.movingBlocks:
+                block.moving = False
+                self.canvas.itemconfig(block.block, fill = "Blue")
+                if not self.snapBoard():
+                    block.undoMove()
+                else:
+                    self.checkBoard()
+                self.createStructures()
+            self.movingBlocks = []
 
     def main(self):
-        while True:
-            time.sleep(.01)
-            self.canvas.itemconfig(self.scoreDisplay, text = f"Score: {self.score}")
-            self.tk.update()
-            self.tk.update_idletasks()
+        """
+        Main Function\n
+        Continuosly Updates Score Board\n
+        Continuosly Updates Canvas\n
+        return -> None
+        """
+        try:
+            while True:
+                time.sleep(.01)
+                self.canvas.itemconfig(self.scoreDisplay, text = f"Score: {self.score}")
+                self.tk.update()
+                self.tk.update_idletasks()
+        except:
+            pass
 
+# Starts Game
 BlockFill().main()

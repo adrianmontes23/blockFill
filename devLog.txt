@@ -30,4 +30,43 @@ it has been filled. But First ill commit rq
 Destroying a row or column 
 Blocks now get destroyed when a row is clearedd
 I also added a score system 
-Ill just ctr c ctr v that into commit cause lol 
+Ill just ctr c ctr v that into commit cause lol
+Next up is what I belive the hardest part is coming up 
+Its a core part that I didnt really want to work on 
+something I call Structures 
+aka a combination of blocks 
+The reason why I belive itll be dificult is beause 
+Ill have to 
+1 attach blocks to other blocks
+2 verify that blocks are placeable and within the board.
+My plan is to have mulitple blocks that spawn to gether but as
+a comglamorate or whaterver its called.
+I plan to make a parent block and make the block 
+follow its parent if its not the cursor 
+so basically the parent can be a cursor
+Itll also have a side to it so its either up down left right
+from its parent, Ill add center for its cursor
+acttually that wont work Ill have to have a main parent the cursor 
+attaches to. Im basically stuck so ill have to do some deep thinking
+really quick. A block is created with a parent and a side
+I got it, I need preset structures so they know what theyre doing
+After hours of fucking around Im done 
+Im going to go through and see if I can optimize 
+Its been tough and I cant really do shit 
+It hasnt worked yet but Im trying out inheritance and 
+With this mess of code I can't really trace the code.
+And I guess Ill document too
+Time to go sleep. So far so good I was able to add
+and remove a lot but I should be chillin 
+Ill leave the rest for tommorow since I dont know
+what could come next but It should be easy to 
+Ill just keep documenting and I should be chillin 
+since I havent finished doing so.
+I want children to work but they aren't I 
+belive the way to go might be by keeping track of children
+instead of parents Ill keep working with parents for now
+I think ill rework all functions that need it.
+Ive made movingblock into movingblocks and now 
+parents keep track of their children
+Children and parents now move as they should
+After a long time, im finnaly going to commit
