@@ -87,3 +87,7 @@ aren't even spawning for some reason
 they aren't behind other blocks they just 
 arent spawning. Nevermid I just misspelled a worked
 time to commit to git
+Now I plan to add a high score and give up button
+Maybe Even a restart button should be simple 
+It was simple enough did in under an hour i think
+time to commit to git

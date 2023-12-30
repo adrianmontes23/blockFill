@@ -1,8 +1,10 @@
+from encodings import utf_8
 from tkinter import *
+from tkinter import messagebox
 from random import randint
 import time
 import Block
-import pdb
+import os
 
 class BlockFill():
 
@@ -25,6 +27,11 @@ class BlockFill():
     
         # Creates Display for Score and Board 
         self.scoreDisplay = self.canvas.create_text(290, 50, text = "Score: 0", font = ("Helvanica", 25))
+        with open("highScore.txt", "r") as highScoreFile:
+            self.highScore = highScoreFile.readline()
+        self.highScoreDisplay = self.canvas.create_text(100, 25, text = f"High Score: {self.highScore}", font = ("Helvanica", 15))
+        self.giveUpDisplay = self.canvas.create_rectangle(455, 15, 545, 50)
+        self.giveUpText = self.canvas.create_text(500, 32, text = "Give Up?", font = ("Helvanica", 15))
         for i in range(11):
             self.canvas.create_line(40, i * 50 + 75, 540, i * 50 + 75)
         for i in range(11):
@@ -35,6 +42,7 @@ class BlockFill():
         self.score = 0
         ## Bool Variables
         self.pressed = False
+        self.end = False
         ## Object Variables
         ## List Variables
         self.movingBlocks = []
@@ -203,6 +211,10 @@ class BlockFill():
 
     def mouseClick(self, e):
         """Upon Left Click, Find Out What Block Was Clicked, Set to Moving, Lighten Color"""
+        if 455 < e.x < 545:
+            if 15 < e.y < 50:
+                self.endGame()
+                return
         self.pressed = True
         for block in self.blockList:
             if block.inRange(e.x, e.y):
@@ -234,6 +246,21 @@ class BlockFill():
             self.createStructures()
             self.movingBlocks = []
 
+    def endGame(self):
+        self.end = True
+        if int(self.highScore) < self.score:
+            os.system("attrib -h highScore.txt")
+            with open("highScore.txt", "w") as highScoreFile:
+                highScoreFile.writelines(f"{self.score}")
+            os.system("attrib +h highScore.txt")
+            if messagebox.askyesno(title = f"NEW HIGH SCORE: {self.score}", message = "Would You Like To Play Again?"):
+                self.tk.destroy()
+                BlockFill().main()
+        else:
+            if messagebox.askyesno(title = "Good Game", message = "Would You Like To Play Again?"):
+                self.tk.destroy()
+                BlockFill().main()
+
     def main(self):
         """
         Main Function\n
@@ -241,14 +268,15 @@ class BlockFill():
         Continuosly Updates Canvas\n
         return -> None
         """
-        try:
-            while True:
+        while True:
+            if self.end:
+                break
+            try:
                 time.sleep(.01)
                 self.canvas.itemconfig(self.scoreDisplay, text = f"Score: {self.score}")
                 self.tk.update()
                 self.tk.update_idletasks()
-        except:
-            pass
+            except:
+                pass
 
-# Starts Game
 BlockFill().main()
