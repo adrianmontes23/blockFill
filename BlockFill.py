@@ -73,12 +73,12 @@ class BlockFill():
         return -> None
         """
         randomNum = randint(0, 1)
-        structs = ["single", "TwoUp", "2by2", "3by3", "T", "Z", "4Line"]
+        structs = ["single", "TwoRight", "2by2", "3by3", "T", "Z", "4Line"]
         struct = structs[randomNum]
         if struct == "single":
             block = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
             self.blockList.append(block)
-        if struct == "TwoUp":
+        if struct == "TwoRight":
             father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side =  "right")
@@ -100,26 +100,32 @@ class BlockFill():
                     block.destroyBlock(self.board)
                     #self.blockList.remove(block)
 
-
     def snapBoard(self):
-        for i in range(len(self.xCenter)):
-            for j in range(len(self.yCenter)):
-                for block in self.blockList:
+        for block in self.movingBlocks:
+            for i in range(len(self.xCenter)):
+                for j in range(len(self.yCenter)):
                     if block.inRange(self.xCenter[i], self.yCenter[j]) and self.board[i][j] == 0:
                         try:
                             block = block.parent
                         except:
                             pass
-                        block.snap(self.xCenter[i], self.yCenter[j])
-                        self.board[i][j] = 1
-                        block.placeOnBoard(i, j)
-                        self.score += 5
-                        return True
-            for block in self.movingBlocks:
-                if block.usable:
-                    return False
-                else: 
-                    return True
+                        for block in self.movingBlocks:
+                            blockSnappable = False
+                            for i in range(len(self.xCenter)):
+                                for j in range(len(self.yCenter)):
+                                    if block.inRange(self.xCenter[i], self.yCenter[j]) and self.board[i][j] == 0:
+                                        blockSnappable = True
+                        if not blockSnappable:
+                            return False
+                        for i in range(len(self.xCenter)):
+                            for j in range(len(self.yCenter)):
+                                for block in self.movingBlocks:
+                                    if block.inRange(self.xCenter[i], self.yCenter[j]):
+                                        block.snap(self.xCenter[i], self.yCenter[j])
+                                        self.board[i][j] = 1
+                                        block.placeOnBoard(i, j)
+                                        self.score += 5
+                                        return True
 
     def checkBoard(self):
         """For Each Row and Column See if Each is Filled Then Clear"""
