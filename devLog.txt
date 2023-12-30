@@ -70,3 +70,12 @@ Ive made movingblock into movingblocks and now
 parents keep track of their children
 Children and parents now move as they should
 After a long time, im finnaly going to commit
+New day new shitter for those keeping track today
+is december 29th Todays task which could also span 
+days is making structures settle if theyre with their parents.
+What im thinking is that a list should be made for all blocks wanting to settle 
+Allow them if them and their children are settling 
+Method two find the parent and see if their children are settling 
+maybe method 1. I don't even know how or what I've done but 
+it's up and working. Next up time to make a couple more structures
+and it should be good. For now time to commit.
