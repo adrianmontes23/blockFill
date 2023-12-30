@@ -2,6 +2,7 @@ from tkinter import *
 from random import randint
 import time
 import Block
+import pdb
 
 class BlockFill():
 
@@ -72,8 +73,8 @@ class BlockFill():
         Creates Random Stucture based off Presets\n
         return -> None
         """
-        randomNum = randint(0, 1)
-        structs = ["single", "TwoRight", "2by2", "3by3", "T", "Z", "4Line"]
+        randomNum = randint(0, 4)
+        structs = ["single", "TwoRight", "TwoUp", "2by2", "3by3", "T", "Z", "4Line"]
         struct = structs[randomNum]
         if struct == "single":
             block = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
@@ -81,7 +82,52 @@ class BlockFill():
         if struct == "TwoRight":
             father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
             self.blockList.append(father)
-            block = Block.ChildBlock(self.canvas, parent = father, side =  "right")
+            block = Block.ChildBlock(self.canvas, parent = father, side = "right")
+            self.blockList.append(block)
+            father.children.append(block)
+        if struct == "TwoUp":
+            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            self.blockList.append(father)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "up")
+            self.blockList.append(block)
+            father.children.append(block)
+        if struct == "2by2":
+            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            self.blockList.append(father)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "right")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "up")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "upRight")
+            self.blockList.append(block)
+            father.children.append(block)
+        if struct == "3by3":
+            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            self.blockList.append(father)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "right")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "up")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "left")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "down")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "upRight")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "upLeft")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "downRight")
+            self.blockList.append(block)
+            father.children.append(block)
+            block = Block.ChildBlock(self.canvas, parent = father, side = "downLeft")
             self.blockList.append(block)
             father.children.append(block)
 
@@ -92,40 +138,34 @@ class BlockFill():
             for block in self.blockList:
                 if block.row == row:
                     block.destroyBlock(self.board)
-                    #self.blockList.remove(block)
         for column in columns:
             self.score += 10
             for block in self.blockList:
                 if block.column == column:
                     block.destroyBlock(self.board)
-                    #self.blockList.remove(block)
 
     def snapBoard(self):
         for block in self.movingBlocks:
+            snappable = False
             for i in range(len(self.xCenter)):
                 for j in range(len(self.yCenter)):
                     if block.inRange(self.xCenter[i], self.yCenter[j]) and self.board[i][j] == 0:
-                        try:
-                            block = block.parent
-                        except:
-                            pass
-                        for block in self.movingBlocks:
-                            blockSnappable = False
-                            for i in range(len(self.xCenter)):
-                                for j in range(len(self.yCenter)):
-                                    if block.inRange(self.xCenter[i], self.yCenter[j]) and self.board[i][j] == 0:
-                                        blockSnappable = True
-                        if not blockSnappable:
-                            return False
-                        for i in range(len(self.xCenter)):
-                            for j in range(len(self.yCenter)):
-                                for block in self.movingBlocks:
-                                    if block.inRange(self.xCenter[i], self.yCenter[j]):
-                                        block.snap(self.xCenter[i], self.yCenter[j])
-                                        self.board[i][j] = 1
-                                        block.placeOnBoard(i, j)
-                                        self.score += 5
-                                        return True
+                        snappable = True
+            if not snappable:
+                return False
+        for block in self.movingBlocks:
+            for i in range(len(self.xCenter)):
+                for j in range(len(self.yCenter)):
+                    if block.inRange(self.xCenter[i], self.yCenter[j]):
+                        block.snap(self.xCenter[i], self.yCenter[j])
+                        self.board[i][j] = 1
+                        block.placeOnBoard(i, j)
+                        self.score += 5
+        return True
+                    
+    def undoBlocks(self):
+        for block in self.movingBlocks:
+            block.undoMove()
 
     def checkBoard(self):
         """For Each Row and Column See if Each is Filled Then Clear"""
@@ -187,11 +227,11 @@ class BlockFill():
             for block in self.movingBlocks:
                 block.moving = False
                 self.canvas.itemconfig(block.block, fill = "Blue")
-                if not self.snapBoard():
-                    block.undoMove()
-                else:
-                    self.checkBoard()
-                self.createStructures()
+            if not self.snapBoard():
+                self.undoBlocks()
+            else:
+                self.checkBoard()
+            self.createStructures()
             self.movingBlocks = []
 
     def main(self):

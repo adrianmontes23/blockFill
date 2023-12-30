@@ -79,3 +79,11 @@ Method two find the parent and see if their children are settling
 maybe method 1. I don't even know how or what I've done but 
 it's up and working. Next up time to make a couple more structures
 and it should be good. For now time to commit.
+Blocks now actually follow their parents and undo
+when nessacary my parents are fighting 
+I wanna go home However some blocks my videos 
+aren't loading to drown out the yelling
+aren't even spawning for some reason
+they aren't behind other blocks they just 
+arent spawning. Nevermid I just misspelled a worked
+time to commit to git
