@@ -91,3 +91,8 @@ Now I plan to add a high score and give up button
 Maybe Even a restart button should be simple 
 It was simple enough did in under an hour i think
 time to commit to git
+Next Up I could really only add to the structures 
+Then send it out
+New Problem, if blocks overlap they are both picked up
+Easy fix, just made them Check once or sum I don't remember
+time to commit to git and send it away

@@ -105,12 +105,20 @@ class ChildBlock(Block):
         x1, y1, x2, y2 = self.parent.getCoordsSq()
         if self.side == "right":
             self.canvas.moveto(self.block, x1 + 50, y1)
+        if self.side == "doubleRight":
+            self.canvas.moveto(self.block, x1 + 100, y1)
         if self.side == "left":
             self.canvas.moveto(self.block, x1 - 50, y1)
+        if self.side == "doubleLeft":
+            self.canvas.moveto(self.block, x1 - 100, y1)
         if self.side == "down":
             self.canvas.moveto(self.block, x1, y1 + 50)
+        if self.side == "doubleDown":
+            self.canvas.moveto(self.block, x1, y1 + 100)
         if self.side == "up":
             self.canvas.moveto(self.block, x1, y1 - 50)
+        if self.side == "doubleUp":
+            self.canvas.moveto(self.block, x1, y1 - 100)
         if self.side == "upRight":
             self.canvas.moveto(self.block, x1 + 50, y1 - 50)
         if self.side == "upLeft":
@@ -126,12 +134,20 @@ class ChildBlock(Block):
         x1, y1, x2, y2 = self.parent.getCoordsSq()
         if self.side == "right":
             self.block = self.canvas.create_rectangle(x1 + 50, y1, x2 + 50, y2, fill = "Blue")
+        if self.side == "doubleRight":
+            self.block = self.canvas.create_rectangle(x1 + 100, y1, x2 + 100, y2, fill = "Blue")
         if self.side == "left":
             self.block = self.canvas.create_rectangle(x1 - 50, y1, x2 - 50, y2, fill = "Blue")
+        if self.side == "doubleLeft":
+            self.block = self.canvas.create_rectangle(x1 - 100, y1, x2 - 100, y2, fill = "Blue")
         if self.side == "down":
             self.block = self.canvas.create_rectangle(x1, y1 + 50, x2, y2 + 50, fill = "Blue")
+        if self.side == "doubleDown":
+            self.block = self.canvas.create_rectangle(x1, y1 + 100, x2, y2 + 100, fill = "Blue")
         if self.side == "up":
             self.block = self.canvas.create_rectangle(x1, y1 - 50, x2, y2 - 50, fill = "Blue")
+        if self.side == "doubleUp":
+            self.block = self.canvas.create_rectangle(x1, y1 - 100, x2, y2 - 100, fill = "Blue")
         if self.side == "upRight":
             self.block = self.canvas.create_rectangle(x1 + 50, y1 - 50, x2 + 50, y2 - 50, fill = "Blue")
         if self.side == "upLeft":
