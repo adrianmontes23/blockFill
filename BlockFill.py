@@ -328,6 +328,7 @@ class BlockFill():
         """For Each Row and Column Destroy Blocks and Award Points
         :param number_list: List of numbers corresponding to each row.
         :param number_list: List of numbers corresponding to each column."""
+        destroyedBlocks = []
         combo = 1
         for row in rows:
             self.score += 50 * combo
@@ -335,12 +336,16 @@ class BlockFill():
             for block in self.blockList:
                 if block.row == row:
                     block.destroyBlock(self.board)
+                    destroyedBlocks.append(block)
         for column in columns:
             self.score += 50 * combo
             combo += 1
             for block in self.blockList:
                 if block.column == column:
                     block.destroyBlock(self.board)
+                    destroyedBlocks.append(block)
+        for block in destroyedBlocks:
+            self.blockList.remove(block)
 
     def snapBoard(self):
         for block in self.movingBlocks:

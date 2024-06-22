@@ -96,3 +96,6 @@ Then send it out
 New Problem, if blocks overlap they are both picked up
 Easy fix, just made them Check once or sum I don't remember
 time to commit to git and send it away
+Im back after 6 months, after checking i want to 
+make the blocks remove themselves from the list so
+they arent checked when doing stuff.
