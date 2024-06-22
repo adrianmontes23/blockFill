@@ -13,8 +13,7 @@ class BlockFill():
         self.tk.resizable(0, 0)
         self.tk.title("Block Fill")
         self.tk.iconbitmap("icon.ico")
-        self.tk.attributes('-topmost', True)
-        self.tk.attributes('-topmost', False)
+        self.tk.wm_protocol("WM_DELETE_WINDOW", self.endGame)
         frame = Frame(self.tk)
         frame.grid()
 
@@ -26,7 +25,7 @@ class BlockFill():
         self.canvas.bind_all("<Motion>", self.mousePointer)
         self.canvas.bind_all("<ButtonPress-1>", self.mouseClick)
         self.canvas.bind_all("<ButtonRelease-1>", self.mouseRelease)
-    
+
         # Creates Display for Score and Board 
         self.scoreDisplay = self.canvas.create_text(290, 50, text = "Score: 0", font = ("Helvanica", 25))
         with open("highScore.txt", "r") as highScoreFile:
@@ -66,9 +65,8 @@ class BlockFill():
         self.createStructures()
 
     def createStructures(self):
-        """
-        Creates Structres if No Blocks Left Availible\n
-        return -> None
+        """Creates Structres if No Blocks Left Availible
+        :return: None        
         """
         usableCount = 0
         for block in self.blockList:
@@ -79,9 +77,8 @@ class BlockFill():
                 self.createRandomStruct(i)
 
     def createRandomStruct(self, pieceNumber):
-        """
-        Creates Random Stucture based off Presets\n
-        return -> None
+        """Creates Random Stucture based off Presets
+        :return: None
         """
         structs = ["single", "TwoRight", "TwoUp", "2by2", "3by3", "cornerUpRight",
                     "TUp", "TDown", "TLeft", "TRight", "plus", "heroVert", "heroHori",
@@ -328,7 +325,9 @@ class BlockFill():
             father.children.append(block)
 
     def clearSpace(self, rows, columns):
-        """For Each Row and Column Destroy Blocks and Award Points"""
+        """For Each Row and Column Destroy Blocks and Award Points
+        :param number_list: List of numbers corresponding to each row.
+        :param number_list: List of numbers corresponding to each column."""
         combo = 1
         for row in rows:
             self.score += 50 * combo
@@ -421,11 +420,7 @@ class BlockFill():
                 break
     
     def mouseRelease(self, e):
-        """
-        Upon Left Click Release, Set Moving Block to False, Undo Color Change,\n
-        If Snaped Check Board Else Undo Move\n
-        Creates Structures
-        """
+        """Upon Left Click Release, Set Moving Block to False, Undo Color Change, If Snaped Check Board Else Undo Move, Creates Structures        """
         self.pressed = False
         if self.movingBlocks:
             for block in self.movingBlocks:
@@ -438,7 +433,7 @@ class BlockFill():
             self.createStructures()
             self.movingBlocks = []
 
-    def endGame(self, killed = False):
+    def endGame(self):
         self.end = True
         if int(self.highScore) < self.score:
             os.system("attrib -h highScore.txt")
@@ -446,13 +441,11 @@ class BlockFill():
                 highScoreFile.writelines(f"{self.score}")
             os.system("attrib +h highScore.txt")
             if messagebox.askyesno(title = f"NEW HIGH SCORE: {self.score}", message = "Would You Like To Play Again?"):
-                if not killed:
-                    self.tk.destroy()
+                self.tk.destroy()
                 BlockFill().main()
         else:
             if messagebox.askyesno(title = "Good Game", message = "Would You Like To Play Again?"):
-                if not killed:
-                    self.tk.destroy()
+                self.tk.destroy()
                 BlockFill().main()
 
     def main(self):
@@ -465,12 +458,9 @@ class BlockFill():
         while True:
             if self.end:
                 break
-            try:
-                time.sleep(.01)
-                self.canvas.itemconfig(self.scoreDisplay, text = f"Score: {self.score}")
-                self.tk.update()
-                self.tk.update_idletasks()
-            except:
-                self.endGame(True)
-
+            time.sleep(.01)
+            self.canvas.itemconfig(self.scoreDisplay, text = f"Score: {self.score}")
+            self.tk.update()
+            self.tk.update_idletasks()
+ 
 BlockFill().main()
