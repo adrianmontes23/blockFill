@@ -6,6 +6,11 @@ class Block():
         self.usable = True
         self.row  =  None
         self.column = None
+        
+    def __repr__(self) -> str:
+        """
+        Returns the position of the block"""
+        return f"({str(self.row)}, {str(self.column)})"
 
     def placeOnBoard(self, row, column):
         """Gets Row and Column and Makes Block Unmovable"""

@@ -336,14 +336,17 @@ class BlockFill():
             for block in self.blockList:
                 if block.row == row:
                     block.destroyBlock(self.board)
-                    destroyedBlocks.append(block)
+                    if block not in destroyedBlocks:
+                        destroyedBlocks.append(block)
         for column in columns:
             self.score += 50 * combo
             combo += 1
             for block in self.blockList:
                 if block.column == column:
                     block.destroyBlock(self.board)
-                    destroyedBlocks.append(block)
+                    if block not in destroyedBlocks:
+                        destroyedBlocks.append(block)
+
         for block in destroyedBlocks:
             self.blockList.remove(block)
 
