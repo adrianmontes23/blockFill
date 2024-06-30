@@ -48,6 +48,7 @@ class BlockFill():
         ## List Variables
         self.movingBlocks = []
         self.blockList = []
+        self.currentStructures = []
         self.xCenter = [ 65, 115, 165, 215, 265, 315, 365, 415, 465, 515]
         self.yCenter = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550]
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -73,7 +74,7 @@ class BlockFill():
             if block.usable:
                 usableCount += 1
         if usableCount == 0:
-            for i in range(3):
+            for i in range(1,4):
                 self.createRandomStruct(i)
 
     def createRandomStruct(self, pieceNumber):
@@ -86,23 +87,24 @@ class BlockFill():
                     "emptyCornerRight", "LRight", "LLeft", "LUp", "LDown"]
         randomNum = randint(0, len(structs)-1)
         struct = structs[randomNum]
+        self.currentStructures.append(struct)
         if struct == "single":
-            block = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            block = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(block)
         if struct == "TwoRight":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
             father.children.append(block)
         if struct == "TwoUp":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "up")
             self.blockList.append(block)
             father.children.append(block)
         if struct == "2by2":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -114,7 +116,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "3by3":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -141,7 +143,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "cornerUpRight":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -150,7 +152,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "TUp":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -162,7 +164,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "TDown":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -174,7 +176,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "TLeft":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "down")
             self.blockList.append(block)
@@ -186,7 +188,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "TRight":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -198,7 +200,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "plus":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -213,7 +215,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "heroVert":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "doubleUp")
             self.blockList.append(block)
@@ -225,7 +227,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "heroHori":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -237,7 +239,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "cornerUpLeft":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "left")
             self.blockList.append(block)
@@ -246,7 +248,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "cornerDownLeft":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "left")
             self.blockList.append(block)
@@ -255,7 +257,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "cornerDownRight":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -264,19 +266,19 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "emptyCornerRight":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "upRight")
             self.blockList.append(block)
             father.children.append(block)
         if struct == "emptyCornerLeft":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "upLeft")
             self.blockList.append(block)
             father.children.append(block)
         if struct == "LRight":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "right")
             self.blockList.append(block)
@@ -288,7 +290,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "LLeft":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "upLeft")
             self.blockList.append(block)
@@ -300,7 +302,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "LUp":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "up")
             self.blockList.append(block)
@@ -312,7 +314,7 @@ class BlockFill():
             self.blockList.append(block)
             father.children.append(block)
         if struct == "LDown":
-            father = Block.ParentBlock(self.canvas, (pieceNumber+1) * 140, 700, (pieceNumber+1) * 140 + 50, 750)
+            father = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(father)
             block = Block.ChildBlock(self.canvas, parent = father, side = "down")
             self.blockList.append(block)
@@ -405,6 +407,8 @@ class BlockFill():
         if e.y > 775:
             e.y = 775
         for block in self.movingBlocks:
+            # print(block.getCoordsSq(), block)
+            print(e)
             block.move(e.x, e.y)
 
     def mouseClick(self, e):
@@ -425,6 +429,7 @@ class BlockFill():
                 for block in self.movingBlocks:
                     block.moving = True
                     self.canvas.itemconfig(block.block, fill = "Cyan")
+                    self.canvas.tag_raise(block.block)
                 break
     
     def mouseRelease(self, e):

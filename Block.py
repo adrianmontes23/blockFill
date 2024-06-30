@@ -7,10 +7,10 @@ class Block():
         self.row  =  None
         self.column = None
         
-    def __repr__(self) -> str:
-        """
-        Returns the position of the block"""
-        return f"({str(self.row)}, {str(self.column)})"
+    # def __repr__(self) -> str:
+    #     """
+    #     Returns the position of the block"""
+    #     return f"({str(self.row)}, {str(self.column)})"
 
     def placeOnBoard(self, row, column):
         """Gets Row and Column and Makes Block Unmovable"""
@@ -32,6 +32,10 @@ class Block():
                 return True
         return False
     
+    def getCoords(self):
+        coords = self.canvas.coords(self.block)
+        return coords[0] + 25, coords[1] + 25
+
     def getCoordsSq(self):
         """
         Returns Codinates of Block\n
@@ -68,6 +72,7 @@ class Block():
 
 class ParentBlock(Block):
     def __init__(self, canvas, x1, y1, x2, y2):
+        super().__init__()
         self.canvas = canvas
         self.x1 = x1
         self.y1 = y1
@@ -75,15 +80,16 @@ class ParentBlock(Block):
         self.y2 = y2
         self.children = []
         self.buildBlock()
-        super().__init__()
         self.originalCoords = self.getCoordsSq()
+
+    def __repr__(self) -> str:
+        return "Parent " + super().__repr__()
 
     def move(self, x, y):
         """Moves Block to Coordinates Then Resets Coordinates if Movable and Usable"""
         if self.moving and self.usable:
+            print("parent")
             self.canvas.moveto(self.block, x - 25, y - 25)
-            for child in self.children:
-                child.move(0, 0)
             super().resetCoords()
     
     def buildBlock(self):
@@ -102,12 +108,16 @@ class ChildBlock(Block):
         self.side = side
         self.buildBlock()
         self.originalCoords = self.getCoordsSq()
+    
+    def __repr__(self) -> str:
+        return f"Chlid: {self.side} " + super().__repr__()
 
     def move(self, x, y):
         """If Parent is Moving, Follow Parent"""
-        if not self.parent.moving or not self.usable:
+        if not self.usable:
             return
         x1, y1, x2, y2 = self.parent.getCoordsSq()
+        print("child")
         if self.side == "right":
             self.canvas.moveto(self.block, x1 + 50, y1)
         if self.side == "doubleRight":

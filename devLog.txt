@@ -99,3 +99,20 @@ time to commit to git and send it away
 Im back after 6 months, after checking i want to 
 make the blocks remove themselves from the list so
 they arent checked when doing stuff.
+i dont want the blocks to appear like they 
+go behind blocks that have already been placed
+imma go figure out how to do that, im pretty sure 
+ive seen an option for that so imma go check that out
+They exist but blocks on top are simply too op
+
+I want things to appear on top if theyer being moved
+I want to find out if the block can be place or else end game
+I want to make blocks move together and not have one offset
+
+I think the reason for as to why there is an offset is becasuse
+theres an initial displacement when picked up and it stays when 
+its being moved. Nevermid, but im extrememly sure that its the 
+reset coordinates funciton that resets too late
+
+I made the things that appear on top chilling frfr i dont know 
+how I did it but we chillin no cap
