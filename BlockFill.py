@@ -48,7 +48,6 @@ class BlockFill():
         ## List Variables
         self.movingBlocks = []
         self.blockList = []
-        self.currentStructures = []
         self.xCenter = [ 65, 115, 165, 215, 265, 315, 365, 415, 465, 515]
         self.yCenter = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550]
         self.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -87,7 +86,6 @@ class BlockFill():
                     "emptyCornerRight", "LRight", "LLeft", "LUp", "LDown"]
         randomNum = randint(0, len(structs)-1)
         struct = structs[randomNum]
-        self.currentStructures.append(struct)
         if struct == "single":
             block = Block.ParentBlock(self.canvas, (pieceNumber) * 140, 700, (pieceNumber) * 140 + 50, 750)
             self.blockList.append(block)
@@ -352,6 +350,54 @@ class BlockFill():
         for block in destroyedBlocks:
             self.blockList.remove(block)
 
+    def areStructuresPlaceable(self):
+        # create a list that checks if the structures are usable (only parents are used)
+        usableStructures = []
+        for block in self.blockList:
+            if type(block) == Block.ParentBlock and block.usable:
+                usableStructures.append(block)
+                block.placeable = False
+        if len(usableStructures) == 0:
+            return True
+        
+
+
+
+        for row in range(len(self.board)):
+            for column in range(len(self.board)):
+                parent: Block.ParentBlock
+                for parent in usableStructures:
+                    for child in parent.children:
+                        child.placeable = False
+                    if self.board[row][column] == 0:
+                        child: Block.ChildBlock
+                        for child in parent.children:
+                            try:
+                                if row + child.rowDisplace < 0 or column + child.columnDisplace < 0:
+                                    raise IndexError
+                                if self.board[row + child.columnDisplace][column + child.rowDisplace] == 0:
+                                    child.placeable = True
+                                else:
+                                    child.placeable = False
+                            except IndexError:
+                                child.placeable = False
+                                break
+                        childPass = True
+
+                        for child in parent.children:
+                            if not child.placeable:
+                                childPass = False
+                        if childPass:
+                            parent.placeable = True
+
+        print(usableStructures)
+        for block in usableStructures:
+            if block.placeable:
+                for child in block.children:
+                    print(child.side, child.rowDisplace, child.columnDisplace)
+                return True
+        return False
+
     def snapBoard(self):
         for block in self.movingBlocks:
             snappable = False
@@ -407,8 +453,6 @@ class BlockFill():
         if e.y > 775:
             e.y = 775
         for block in self.movingBlocks:
-            # print(block.getCoordsSq(), block)
-            print(e)
             block.move(e.x, e.y)
 
     def mouseClick(self, e):
@@ -445,6 +489,9 @@ class BlockFill():
                 self.checkBoard()
             self.createStructures()
             self.movingBlocks = []
+            playable = self.areStructuresPlaceable()
+            if not playable:
+                self.endGame()
 
     def endGame(self):
         self.end = True

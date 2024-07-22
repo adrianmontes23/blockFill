@@ -116,3 +116,9 @@ reset coordinates funciton that resets too late
 
 I made the things that appear on top chilling frfr i dont know 
 how I did it but we chillin no cap
+
+Now I have to do something with this offset thingies
+I honestly have no clue i maight have to redo movement
+at this point.
+
+move with the e.x and e.y coords instead of following parent

@@ -4,6 +4,7 @@ class Block():
     def __init__(self):
         self.moving = False
         self.usable = True
+        self.placeable = False
         self.row  =  None
         self.column = None
         
@@ -26,15 +27,11 @@ class Block():
         """
         if not self.usable:
             return False
-        self.resetCoords()
-        if self.x1 < x < self.x2:
-            if self.y1 < y < self.y2:
+        x1, y1, x2, y2 = self.getCoordsSq()
+        if x1 < x < x2:
+            if y1 < y < y2:
                 return True
         return False
-    
-    def getCoords(self):
-        coords = self.canvas.coords(self.block)
-        return coords[0] + 25, coords[1] + 25
 
     def getCoordsSq(self):
         """
@@ -43,18 +40,9 @@ class Block():
         """
         return self.canvas.coords(self.block)
     
-    def resetCoords(self):
-        """Resets x and y Coordinates to current Coordinates"""
-        coords = self.getCoordsSq()
-        self.x1 = coords[0]
-        self.y1 = coords[1]
-        self.x2 = coords[2]
-        self.y2 = coords[3]
-    
     def undoMove(self):
         """Resets Blocks Position to Position of Creation"""
         self.canvas.moveto(self.block, self.originalCoords[0], self.originalCoords[1])
-        self.resetCoords()
 
     def destroyBlock(self, board):
         """
@@ -88,9 +76,7 @@ class ParentBlock(Block):
     def move(self, x, y):
         """Moves Block to Coordinates Then Resets Coordinates if Movable and Usable"""
         if self.moving and self.usable:
-            print("parent")
             self.canvas.moveto(self.block, x - 25, y - 25)
-            super().resetCoords()
     
     def buildBlock(self):
         """Creates Block on Canvas"""
@@ -103,6 +89,8 @@ class ChildBlock(Block):
         self.y1 = 0
         self.x2 = 0
         self.y2 = 0
+        self.rowDisplace = 0
+        self.columnDisplace = 0
         self.canvas = canvas
         self.parent = parent
         self.side = side
@@ -116,59 +104,71 @@ class ChildBlock(Block):
         """If Parent is Moving, Follow Parent"""
         if not self.usable:
             return
-        x1, y1, x2, y2 = self.parent.getCoordsSq()
-        print("child")
         if self.side == "right":
-            self.canvas.moveto(self.block, x1 + 50, y1)
+            self.canvas.moveto(self.block, x + 25, y - 25)
         if self.side == "doubleRight":
-            self.canvas.moveto(self.block, x1 + 100, y1)
+            self.canvas.moveto(self.block, x + 75, y - 25)
         if self.side == "left":
-            self.canvas.moveto(self.block, x1 - 50, y1)
+            self.canvas.moveto(self.block, x - 75, y - 25)
         if self.side == "doubleLeft":
-            self.canvas.moveto(self.block, x1 - 100, y1)
+            self.canvas.moveto(self.block, x - 125, y - 25)
         if self.side == "down":
-            self.canvas.moveto(self.block, x1, y1 + 50)
+            self.canvas.moveto(self.block, x - 25, y + 25)
         if self.side == "doubleDown":
-            self.canvas.moveto(self.block, x1, y1 + 100)
+            self.canvas.moveto(self.block, x - 25, y + 75)
         if self.side == "up":
-            self.canvas.moveto(self.block, x1, y1 - 50)
+            self.canvas.moveto(self.block, x - 25, y - 75)
         if self.side == "doubleUp":
-            self.canvas.moveto(self.block, x1, y1 - 100)
+            self.canvas.moveto(self.block, x - 25, y - 125)
         if self.side == "upRight":
-            self.canvas.moveto(self.block, x1 + 50, y1 - 50)
+            self.canvas.moveto(self.block, x + 25, y - 75)
         if self.side == "upLeft":
-            self.canvas.moveto(self.block, x1 - 50, y1 - 50)
+            self.canvas.moveto(self.block, x - 75, y - 75)
         if self.side == "downRight":
-            self.canvas.moveto(self.block, x1 + 50, y1 + 50)
+            self.canvas.moveto(self.block, x + 25, y + 25)
         if self.side == "downLeft":
-            self.canvas.moveto(self.block, x1 - 50, y1 + 50)
-        self.resetCoords()
-
+            self.canvas.moveto(self.block, x - 75, y + 25)
+        
     def buildBlock(self):
-        """Creates Block on Corresponding Side to Parent, Then Resets Coordinates"""
+        """Creates Block on Corresponding Side to Parent"""
         x1, y1, x2, y2 = self.parent.getCoordsSq()
         if self.side == "right":
             self.block = self.canvas.create_rectangle(x1 + 50, y1, x2 + 50, y2, fill = "Blue")
+            self.columnDisplace = 1
         if self.side == "doubleRight":
             self.block = self.canvas.create_rectangle(x1 + 100, y1, x2 + 100, y2, fill = "Blue")
+            self.columnDisplace = 2
         if self.side == "left":
             self.block = self.canvas.create_rectangle(x1 - 50, y1, x2 - 50, y2, fill = "Blue")
+            self.columnDisplace = -1
         if self.side == "doubleLeft":
             self.block = self.canvas.create_rectangle(x1 - 100, y1, x2 - 100, y2, fill = "Blue")
+            self.columnDisplace = -2
         if self.side == "down":
             self.block = self.canvas.create_rectangle(x1, y1 + 50, x2, y2 + 50, fill = "Blue")
+            self.rowDisplace = 1
         if self.side == "doubleDown":
             self.block = self.canvas.create_rectangle(x1, y1 + 100, x2, y2 + 100, fill = "Blue")
+            self.rowDisplace = 2
         if self.side == "up":
             self.block = self.canvas.create_rectangle(x1, y1 - 50, x2, y2 - 50, fill = "Blue")
+            self.rowDisplace = -1
         if self.side == "doubleUp":
             self.block = self.canvas.create_rectangle(x1, y1 - 100, x2, y2 - 100, fill = "Blue")
+            self.rowDisplace = -2
         if self.side == "upRight":
             self.block = self.canvas.create_rectangle(x1 + 50, y1 - 50, x2 + 50, y2 - 50, fill = "Blue")
+            self.rowDisplace = -1
+            self.columnDisplace = 1
         if self.side == "upLeft":
             self.block = self.canvas.create_rectangle(x1 - 50, y1 - 50, x2 - 50, y2 - 50, fill = "Blue")
+            self.rowDisplace = -1
+            self.columnDisplace = -1
         if self.side == "downRight":
             self.block = self.canvas.create_rectangle(x1 + 50, y1 + 50, x2 + 50, y2 + 50, fill = "Blue")
+            self.rowDisplace = 1
+            self.columnDisplace = 1
         if self.side == "downLeft":
             self.block = self.canvas.create_rectangle(x1 - 50, y1 + 50, x2 - 50, y2 + 50, fill = "Blue")
-        self.resetCoords()
+            self.rowDisplace = 1
+            self.columnDisplace = -1
